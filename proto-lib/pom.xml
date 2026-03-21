@@ -42,7 +42,7 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>${protobuf-maven-plugin.version}</version>
                 <configuration>
-                    <protoc>${protoc.version}</protoc>
+                    <protoc>${protobuf.version}</protoc>
                     <plugins>
                         <plugin kind="binary-maven">
                             <groupId>io.grpc</groupId>
