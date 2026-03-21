@@ -1,0 +1,21 @@
+/*
+Conventions: keep syntax/import/option/package in this order.
+Field numbers cannot be 0 unless it's an enum (where it is mandatory). 0 is reserved in protobuf spec.
+RPC method names UpperCamelCase, variable names snake_case: Protoc will convert to conventions of target code.
+ */
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_package = "com.github.dkw87.grpc.proto";
+option java_multiple_files = true;
+
+package stringservice;
+
+service StringService {
+  rpc GetString (google.protobuf.Empty) returns (StringResponse);
+}
+
+message StringResponse {
+  string string_value = 1;
+}
