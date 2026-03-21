@@ -1,4 +1,4 @@
-package com.github.dkw87.service;
+package com.github.dkw87.service.api.grpc;
 
 import com.github.dkw87.grpc.proto.StringResponse;
 import com.github.dkw87.grpc.proto.StringServiceGrpc;
