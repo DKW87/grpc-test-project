@@ -24,6 +24,7 @@
         <spring-grpc.version>1.0.2</spring-grpc.version>
         <!-- TODO: figure out how to properly overwrite to avoid gencode/runtime mismatch issues -->
         <protobuf.version>4.33.3</protobuf.version>
+        <lombok.version>1.18.44</lombok.version>
     </properties>
 
     <dependencyManagement>
