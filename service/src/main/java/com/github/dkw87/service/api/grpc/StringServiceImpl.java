@@ -13,12 +13,17 @@ public class StringServiceImpl extends StringServiceGrpc.StringServiceImplBase {
 
     @Override
     public void getString(Empty request, StreamObserver<StringResponse> responseObserver) {
+        log.info("Received request for getString() and building response...");
+
         StringResponse response = StringResponse.newBuilder()
                 .setStringValue("Hi, successfully called a gRPC service. Good job! :)")
                 .build();
 
+        log.info("Response build and sending response...");
         responseObserver.onNext(response);
+
         responseObserver.onCompleted();
+        log.info("Completed request for getString()");
     }
 
 }
