@@ -18,7 +18,10 @@ public class StringServiceController {
     @GetMapping
     public String string() {
         log.info("Executing StringServiceClient...");
-        return client.execute().getStringValue();
+        String value = client.execute().getStringValue();
+
+        log.info("Response from StringServiceClient : {}", value);
+        return value;
     }
 
 }

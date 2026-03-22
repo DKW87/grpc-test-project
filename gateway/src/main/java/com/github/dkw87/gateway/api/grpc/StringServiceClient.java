@@ -19,7 +19,7 @@ public class StringServiceClient {
     }
 
     public StringResponse execute() {
-        log.info("Executing StringServiceClient...");
+        log.info("Requesting from StringServiceGrpc...");
         return stub.getString(Empty.getDefaultInstance());
     }
 
