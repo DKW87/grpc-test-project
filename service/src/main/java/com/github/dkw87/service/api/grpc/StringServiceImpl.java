@@ -16,7 +16,7 @@ public class StringServiceImpl extends StringServiceGrpc.StringServiceImplBase {
         log.info("Received request for getString() and building response...");
 
         StringResponse response = StringResponse.newBuilder()
-                .setStringValue("Hi, successfully called a gRPC service. Good job! :)")
+                .setStringValue("Hi, successfully set up and called a gRPC service. Good job! :)")
                 .build();
 
         log.info("Response build and sending response...");
