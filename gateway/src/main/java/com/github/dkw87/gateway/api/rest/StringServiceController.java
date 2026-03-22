@@ -20,7 +20,7 @@ public class StringServiceController {
         log.info("Executing StringServiceClient...");
         String value = client.execute().getStringValue();
 
-        log.info("Response from StringServiceClient : {}", value);
+        log.info("Response from StringServiceClient: {}", value);
         return value;
     }
 
