@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: gateway
+
+server:
+  port: 8080
+
+grpc:
+  client:
+    channels:
+      service:
+        address: localhost:9090
