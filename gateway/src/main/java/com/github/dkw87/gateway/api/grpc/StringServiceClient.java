@@ -16,7 +16,7 @@ public class StringServiceClient {
         this.stub = StringServiceGrpc.newBlockingStub(channelFactory.createChannel("service"));
     }
 
-    public StringResponse getResponse() {
+    public StringResponse execute() {
         return stub.getString(Empty.getDefaultInstance());
     }
 
