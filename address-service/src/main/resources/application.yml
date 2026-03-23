@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: address-service
+
+grpc:
+  server:
+    port: 9092
