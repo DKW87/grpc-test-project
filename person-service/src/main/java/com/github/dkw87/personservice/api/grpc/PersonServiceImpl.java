@@ -1,0 +1,38 @@
+package com.github.dkw87.personservice.api.grpc;
+
+import com.github.dkw87.grpc.proto.person.*;
+import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.grpc.server.service.GrpcService;
+
+import java.util.List;
+
+@GrpcService
+@Slf4j
+public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
+
+    @Override
+    public void getPerson(PersonRequest request,  StreamObserver<PersonResponse> responseObserver) {
+        log.info("Received request for getPerson() with id {}...", request.getId());
+
+        List<String> hobbys = List.of("Cricket", "Badminton", "Sipping tea");
+
+        Person person = Person.newBuilder()
+                .setName("Gerald Richard Peter Callingwood")
+                .setGender("m")
+                .setDob("01-10-1947")
+                .setPob("Birmingham")
+                .addAllHobbys(hobbys)
+                .build();
+
+        PersonResponse response = PersonResponse.newBuilder()
+                .setPerson(person)
+                .build();
+
+
+        responseObserver.onNext(response);
+        log.info("Succesfully sent PersonResponse with id {}", request.getId());
+        responseObserver.onCompleted();
+    }
+
+}
