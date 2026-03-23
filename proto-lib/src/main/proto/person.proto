@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_package = "com.github.dkw87.grpc.proto.person";
+option java_multiple_files = true;
+
+package personservice;
+
+service PersonService {
+  rpc GetPerson (PersonRequest) returns (PersonResponse);
+}
+
+message PersonRequest {
+  int64 id = 1;
+}
+
+message Person {
+  string name = 1;
+  string gender = 2;
+  string dob = 3;
+  string pob = 4;
+  repeated string hobbys = 5;
+}
+
+message PersonResponse {
+  Person person = 1;
+}
