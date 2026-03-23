@@ -13,7 +13,7 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
 
     @Override
     public void getPerson(PersonRequest request,  StreamObserver<PersonResponse> responseObserver) {
-        log.info("Received request for getPerson() with id {}...", request.getId());
+        log.info("Received request for getPerson() for id {}...", request.getId());
 
         List<String> hobbys = List.of("Cricket", "Badminton", "Sipping tea");
 
@@ -30,7 +30,7 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
                 .build();
 
         responseObserver.onNext(response);
-        log.info("Successfully sent PersonResponse with id {}", request.getId());
+        log.info("Successfully sent PersonResponse for id {}", request.getId());
         responseObserver.onCompleted();
     }
 
