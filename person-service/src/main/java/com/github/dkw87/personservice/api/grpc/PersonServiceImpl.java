@@ -22,13 +22,12 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
                 .setGender("m")
                 .setDob("01-10-1947")
                 .setPob("Birmingham")
-                .addAllHobbys(hobbys)
+                .addAllHobbys(hobbys) // dont use setter but addAll to add whole List<>, setter can overwrite specific index w/ value
                 .build();
 
         PersonResponse response = PersonResponse.newBuilder()
                 .setPerson(person)
                 .build();
-
 
         responseObserver.onNext(response);
         log.info("Succesfully sent PersonResponse with id {}", request.getId());
