@@ -30,7 +30,7 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
                 .build();
 
         responseObserver.onNext(response);
-        log.info("Succesfully sent PersonResponse with id {}", request.getId());
+        log.info("Successfully sent PersonResponse with id {}", request.getId());
         responseObserver.onCompleted();
     }
 
