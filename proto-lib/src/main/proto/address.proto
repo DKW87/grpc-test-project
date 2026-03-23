@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "com.github.dkw87.grpc.proto.address";
+option java_multiple_files = true;
+
+package addressservice;
+
+service AddressService {
+  rpc GetAddress (AddressRequest) returns (AddressResponse);
+}
+
+message AddressRequest {
+  int64 id = 1;
+}
+
+message Address {
+  string street_and_number = 1;
+  string zip = 2;
+  string city = 3;
+  string country = 4;
+}
+
+message AddressResponse {
+  Address address = 1;
+}
