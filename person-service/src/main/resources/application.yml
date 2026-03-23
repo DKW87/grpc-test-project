@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: person-service
+
+grpc:
+  server:
+    port: 9091
