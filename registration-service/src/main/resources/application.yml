@@ -1,6 +1,6 @@
 spring:
   application:
-    name: person-service
+    name: registration-service
   grpc:
     server:
       port: 9090
