@@ -3,7 +3,7 @@
     <toRun name="GatewayApplication" type="SpringBootApplicationConfigurationType" />
     <toRun name="AddressServiceApplication" type="SpringBootApplicationConfigurationType" />
     <toRun name="PersonServiceApplication" type="SpringBootApplicationConfigurationType" />
-    <toRun name="ServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="RegistrationServiceApplication" type="SpringBootApplicationConfigurationType" />
     <method v="2" />
   </configuration>
 </component>
