@@ -4,3 +4,9 @@ spring:
   grpc:
     server:
       port: 9090
+    client:
+      channels:
+        person-service:
+          address: localhost:9091
+        address-service:
+          address: localhost:9092
