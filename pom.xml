@@ -12,7 +12,7 @@
     <modules>
         <module>proto-lib</module>
         <module>gateway</module>
-        <module>service</module>
+        <module>registration-service</module>
         <module>address-service</module>
         <module>person-service</module>
     </modules>
