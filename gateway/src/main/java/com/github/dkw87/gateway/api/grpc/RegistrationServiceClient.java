@@ -31,6 +31,7 @@ public class RegistrationServiceClient {
         RegistrationRequest request = RegistrationRequest.newBuilder().setId(id).build();
 
         RegistrationResponse queriedResponse = stub.getRegistration(request);
+        log.info("Received response from RegistrationServiceGrpc for id {} ", id);
 
         cache.putInCache(queriedResponse);
 
