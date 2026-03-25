@@ -17,8 +17,9 @@ message RegistrationRequest {
 }
 
 message RegistrationResponse {
-  string event_name = 1;
-  bool wants_to_receive_newsletter = 2;
-  personservice.Person person = 3;
-  addressservice.Address address = 4;
+  int64 id = 1;
+  string event_name = 2;
+  bool wants_to_receive_newsletter = 3;
+  personservice.Person person = 4;
+  addressservice.Address address = 5;
 }

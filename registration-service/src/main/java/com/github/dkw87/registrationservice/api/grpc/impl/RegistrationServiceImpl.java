@@ -28,6 +28,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         Person person =  psClient.execute(request.getId()).getPerson();
 
         RegistrationResponse response = RegistrationResponse.newBuilder()
+                .setId(request.getId())
                 .setEventName("Wimbledon High Tea Party")
                 .setWantsToReceiveNewsletter(true)
                 .setAddress(address)
