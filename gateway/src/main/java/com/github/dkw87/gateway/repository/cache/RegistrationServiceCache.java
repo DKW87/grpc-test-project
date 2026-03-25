@@ -15,7 +15,7 @@ public class RegistrationServiceCache {
     public RegistrationResponse getFromCache(long id) {
         RegistrationResponse registration = CACHE_MAP.get(id);
         String logLine = (registration == null)
-                ? "No RegistrationResponse found for id {} "
+                ? "No RegistrationResponse found in cache for id {} "
                 : "Found RegistrationResponse in cache for id {} ";
 
         log.info(logLine, id);
