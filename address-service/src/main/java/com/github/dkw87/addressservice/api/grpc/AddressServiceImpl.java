@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.grpc.server.service.GrpcService;
 
+import java.util.Locale;
+
 @GrpcService
 @Slf4j
 public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBase {
@@ -16,7 +18,7 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
     @Override
     public void getAddress(AddressRequest request, StreamObserver<AddressResponse> responseObserver) {
         log.info("Received request for getAddress() for id {}...", request.getId());
-        Faker faker = new Faker();
+        Faker faker = new Faker(Locale.ENGLISH);
 
         Address address = Address.newBuilder()
                 .setStreetAndNumber(faker.address().fullAddress())
