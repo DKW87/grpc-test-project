@@ -26,6 +26,7 @@
         <!-- TODO: figure out how to properly overwrite to avoid gencode/runtime mismatch issues -->
         <protobuf.version>4.33.3</protobuf.version>
         <lombok.version>1.18.44</lombok.version>
+        <datafaker.version>2.5.4</datafaker.version>
     </properties>
 
     <dependencyManagement>
@@ -43,6 +44,11 @@
                 <version>${spring-grpc.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.datafaker</groupId>
+                <artifactId>datafaker</artifactId>
+                <version>${datafaker.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
