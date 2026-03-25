@@ -6,6 +6,7 @@ import com.github.dkw87.grpc.proto.address.AddressResponse;
 import com.github.dkw87.grpc.proto.address.AddressServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.grpc.server.service.GrpcService;
 
 @GrpcService
@@ -15,12 +16,13 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
     @Override
     public void getAddress(AddressRequest request, StreamObserver<AddressResponse> responseObserver) {
         log.info("Received request for getAddress() for id {}...", request.getId());
+        Faker faker = new Faker();
 
         Address address = Address.newBuilder()
-                .setStreetAndNumber("10 Downing Street")
-                .setZip("SW1A 2AA")
-                .setCity("City of Westminster London")
-                .setCountry("United Kingdom")
+                .setStreetAndNumber(faker.address().fullAddress())
+                .setZip(faker.address().zipCode())
+                .setCity(faker.address().city())
+                .setCountry(faker.address().country())
                 .build();
 
         AddressResponse response  = AddressResponse.newBuilder()
