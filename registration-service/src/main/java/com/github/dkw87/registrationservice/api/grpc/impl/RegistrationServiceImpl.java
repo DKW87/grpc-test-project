@@ -10,7 +10,10 @@ import com.github.dkw87.registrationservice.api.grpc.client.PersonServiceClient;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.grpc.server.service.GrpcService;
+
+import java.util.Locale;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -23,14 +26,15 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
     @Override
     public void getRegistration(RegistrationRequest request, StreamObserver<RegistrationResponse> responseObserver) {
         log.info("Received request for getRegistration() for id {}...", request.getId());
+        Faker faker = new Faker(Locale.ENGLISH);
 
         Address address = asClient.execute(request.getId()).getAddress();
         Person person =  psClient.execute(request.getId()).getPerson();
 
         RegistrationResponse response = RegistrationResponse.newBuilder()
                 .setId(request.getId())
-                .setEventName("Wimbledon High Tea Party")
-                .setWantsToReceiveNewsletter(true)
+                .setEventName(faker.word().adjective() + " " + faker.company().buzzword() + " " + faker.company().catchPhrase())
+                .setWantsToReceiveNewsletter(faker.bool().bool())
                 .setAddress(address)
                 .setPerson(person)
                 .build();
