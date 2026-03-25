@@ -21,7 +21,6 @@ public class RegistrationServiceClient {
     }
 
     public RegistrationResponse execute(long id) {
-        log.info("Requesting response from RegistrationServiceGrpc for id {}...", id);
         RegistrationResponse cachedResponse = cache.getFromCache(id);
 
         if (cachedResponse != null) {
@@ -30,6 +29,7 @@ public class RegistrationServiceClient {
 
         RegistrationRequest request = RegistrationRequest.newBuilder().setId(id).build();
 
+        log.info("Requesting response from RegistrationServiceGrpc for id {}...", id);
         RegistrationResponse queriedResponse = stub.getRegistration(request);
         log.info("Received response from RegistrationServiceGrpc for id {} ", id);
 
