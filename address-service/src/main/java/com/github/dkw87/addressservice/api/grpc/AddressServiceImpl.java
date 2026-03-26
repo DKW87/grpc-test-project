@@ -21,7 +21,7 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
         Faker faker = new Faker(Locale.ENGLISH);
 
         Address address = Address.newBuilder()
-                .setStreetAndNumber(faker.address().fullAddress())
+                .setStreetAndNumber(faker.address().streetName() + " " + faker.address().streetAddressNumber())
                 .setZip(faker.address().zipCode())
                 .setCity(faker.address().city())
                 .setCountry(faker.address().country())

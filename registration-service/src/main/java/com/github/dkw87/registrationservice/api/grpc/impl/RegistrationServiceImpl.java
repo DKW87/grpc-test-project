@@ -12,8 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.grpc.server.service.GrpcService;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -31,9 +34,13 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         Address address = asClient.execute(request.getId()).getAddress();
         Person person = psClient.execute(request.getId()).getPerson();
 
+        String adjective = StringUtils.capitalize(faker.word().adjective());
+        String hobby = capitalizeWords(faker.hobby().activity());
+        String adverb = StringUtils.capitalize(faker.word().adverb());
+
         RegistrationResponse response = RegistrationResponse.newBuilder()
                 .setId(request.getId())
-                .setEventName(faker.word().adjective() + " " + faker.company().buzzword() + " " + faker.company().catchPhrase())
+                .setEventName(String.format("%s %s %s", adjective,hobby,adverb))
                 .setWantsToReceiveNewsletter(faker.bool().bool())
                 .setAddress(address)
                 .setPerson(person)
@@ -42,6 +49,12 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         responseObserver.onNext(response);
         log.info("Successfully sent RegistrationResponse for id {}", request.getId());
         responseObserver.onCompleted();
+    }
+
+    private String capitalizeWords(String input) {
+        return Arrays.stream(input.split(" "))
+                .map(StringUtils::capitalize)
+                .collect(Collectors.joining(" "));
     }
 
 }

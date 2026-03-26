@@ -19,10 +19,14 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
         Faker faker = new Faker(Locale.ENGLISH);
 
         List<String> hobbys = List.of(faker.hobby().activity(), faker.hobby().activity(), faker.hobby().activity());
+        String gender = faker.gender().binaryTypes();
+        String fullName = gender.equals("Male")
+                ? faker.name().maleFirstName() + " " + faker.name().lastName()
+                : faker.name().femaleFirstName() + " " + faker.name().lastName();
 
         Person person = Person.newBuilder()
-                .setName(faker.name().fullName())
-                .setGender(faker.gender().binaryTypes())
+                .setName(fullName)
+                .setGender(gender)
                 .setDob(faker.timeAndDate().birthday("dd-MM-yyyy"))
                 .setPob(faker.address().city())
                 .addAllHobbys(hobbys) // dont use setter but addAll to add whole List<>, setter can overwrite specific index w/ value
