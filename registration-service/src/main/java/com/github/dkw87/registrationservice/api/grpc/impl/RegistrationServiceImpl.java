@@ -29,7 +29,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         Faker faker = new Faker(Locale.ENGLISH);
 
         Address address = asClient.execute(request.getId()).getAddress();
-        Person person =  psClient.execute(request.getId()).getPerson();
+        Person person = psClient.execute(request.getId()).getPerson();
 
         RegistrationResponse response = RegistrationResponse.newBuilder()
                 .setId(request.getId())

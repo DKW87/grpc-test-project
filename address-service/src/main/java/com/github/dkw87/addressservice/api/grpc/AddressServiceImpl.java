@@ -27,7 +27,7 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
                 .setCountry(faker.address().country())
                 .build();
 
-        AddressResponse response  = AddressResponse.newBuilder()
+        AddressResponse response = AddressResponse.newBuilder()
                 .setAddress(address)
                 .build();
 

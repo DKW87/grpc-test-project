@@ -14,7 +14,7 @@ import java.util.Locale;
 public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
 
     @Override
-    public void getPerson(PersonRequest request,  StreamObserver<PersonResponse> responseObserver) {
+    public void getPerson(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
         log.info("Received request for getPerson() for id {}...", request.getId());
         Faker faker = new Faker(Locale.ENGLISH);
 
