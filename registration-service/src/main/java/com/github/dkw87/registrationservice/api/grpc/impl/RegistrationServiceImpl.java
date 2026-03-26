@@ -29,16 +29,16 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
     @Override
     public void getRegistration(RegistrationRequest request, StreamObserver<RegistrationResponse> responseObserver) {
         log.info("Received request for getRegistration() for id {}...", request.getId());
-        Faker faker = new Faker(Locale.ENGLISH);
+        final Faker faker = new Faker(Locale.ENGLISH);
 
-        Address address = asClient.execute(request.getId()).getAddress();
-        Person person = psClient.execute(request.getId()).getPerson();
+        final Address address = asClient.execute(request.getId()).getAddress();
+        final Person person = psClient.execute(request.getId()).getPerson();
 
-        String adjective = StringUtils.capitalize(faker.word().adjective());
-        String hobby = capitalizeWords(faker.hobby().activity());
-        String adverb = StringUtils.capitalize(faker.word().adverb());
+        final String adjective = StringUtils.capitalize(faker.word().adjective());
+        final String hobby = capitalizeWords(faker.hobby().activity());
+        final String adverb = StringUtils.capitalize(faker.word().adverb());
 
-        RegistrationResponse response = RegistrationResponse.newBuilder()
+        final RegistrationResponse response = RegistrationResponse.newBuilder()
                 .setId(request.getId())
                 .setEventName(String.format("%s %s %s", adjective,hobby,adverb))
                 .setWantsToReceiveNewsletter(faker.bool().bool())
@@ -51,10 +51,11 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         responseObserver.onCompleted();
     }
 
-    private String capitalizeWords(String input) {
-        return Arrays.stream(input.split(" "))
+    private String capitalizeWords(String words) {
+        return Arrays.stream(words.split(" "))
                 .map(StringUtils::capitalize)
                 .collect(Collectors.joining(" "));
     }
 
 }
+

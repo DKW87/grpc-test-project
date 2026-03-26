@@ -19,7 +19,7 @@ public class PersonServiceClient {
 
     public PersonResponse execute(long id) {
         log.info("Requesting response from PersonServiceGrpc for id {}...", id);
-        PersonRequest request = PersonRequest.newBuilder().setId(id).build();
+        final PersonRequest request = PersonRequest.newBuilder().setId(id).build();
         return stub.getPerson(request);
     }
 

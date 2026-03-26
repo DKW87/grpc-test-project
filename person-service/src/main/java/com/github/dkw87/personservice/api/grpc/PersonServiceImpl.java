@@ -16,15 +16,15 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
     @Override
     public void getPerson(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
         log.info("Received request for getPerson() for id {}...", request.getId());
-        Faker faker = new Faker(Locale.ENGLISH);
+        final Faker faker = new Faker(Locale.ENGLISH);
 
-        List<String> hobbys = List.of(faker.hobby().activity(), faker.hobby().activity(), faker.hobby().activity());
-        String gender = faker.gender().binaryTypes();
-        String fullName = gender.equals("Male")
+        final List<String> hobbys = List.of(faker.hobby().activity(), faker.hobby().activity(), faker.hobby().activity());
+        final String gender = faker.gender().binaryTypes();
+        final String fullName = gender.equals("Male")
                 ? faker.name().maleFirstName() + " " + faker.name().lastName()
                 : faker.name().femaleFirstName() + " " + faker.name().lastName();
 
-        Person person = Person.newBuilder()
+        final Person person = Person.newBuilder()
                 .setName(fullName)
                 .setGender(gender)
                 .setDob(faker.timeAndDate().birthday("dd-MM-yyyy"))
@@ -32,7 +32,7 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
                 .addAllHobbys(hobbys) // dont use setter but addAll to add whole List<>, setter can overwrite specific index w/ value
                 .build();
 
-        PersonResponse response = PersonResponse.newBuilder()
+        final PersonResponse response = PersonResponse.newBuilder()
                 .setPerson(person)
                 .build();
 

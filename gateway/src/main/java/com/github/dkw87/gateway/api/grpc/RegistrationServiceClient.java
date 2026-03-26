@@ -21,16 +21,16 @@ public class RegistrationServiceClient {
     }
 
     public RegistrationResponse execute(long id) {
-        RegistrationResponse cachedResponse = cache.getFromCache(id);
+        final RegistrationResponse cachedResponse = cache.getFromCache(id);
 
         if (cachedResponse != null) {
             return cachedResponse;
         }
 
-        RegistrationRequest request = RegistrationRequest.newBuilder().setId(id).build();
+        final RegistrationRequest request = RegistrationRequest.newBuilder().setId(id).build();
 
         log.info("Requesting response from RegistrationServiceGrpc for id {}...", id);
-        RegistrationResponse queriedResponse = stub.getRegistration(request);
+        final RegistrationResponse queriedResponse = stub.getRegistration(request);
         log.info("Received response from RegistrationServiceGrpc for id {} ", id);
 
         cache.putInCache(queriedResponse);

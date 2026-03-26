@@ -13,8 +13,8 @@ public class RegistrationServiceCache {
     private final static ConcurrentHashMap<Long, RegistrationResponse> CACHE_MAP = new ConcurrentHashMap<>();
 
     public RegistrationResponse getFromCache(long id) {
-        RegistrationResponse registration = CACHE_MAP.get(id);
-        String logLine = (registration == null)
+        final RegistrationResponse registration = CACHE_MAP.get(id);
+        final String logLine = (registration == null)
                 ? "No RegistrationResponse found in cache for id {} "
                 : "Found RegistrationResponse in cache for id {} ";
 

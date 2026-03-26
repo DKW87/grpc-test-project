@@ -18,16 +18,16 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
     @Override
     public void getAddress(AddressRequest request, StreamObserver<AddressResponse> responseObserver) {
         log.info("Received request for getAddress() for id {}...", request.getId());
-        Faker faker = new Faker(Locale.ENGLISH);
+        final Faker faker = new Faker(Locale.ENGLISH);
 
-        Address address = Address.newBuilder()
+        final Address address = Address.newBuilder()
                 .setStreetAndNumber(faker.address().streetName() + " " + faker.address().streetAddressNumber())
                 .setZip(faker.address().zipCode())
                 .setCity(faker.address().city())
                 .setCountry(faker.address().country())
                 .build();
 
-        AddressResponse response = AddressResponse.newBuilder()
+        final AddressResponse response = AddressResponse.newBuilder()
                 .setAddress(address)
                 .build();
 

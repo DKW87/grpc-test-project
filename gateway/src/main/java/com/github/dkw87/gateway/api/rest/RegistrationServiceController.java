@@ -22,7 +22,7 @@ public class RegistrationServiceController {
     @GetMapping("/{id}")
     public String getId(@PathVariable("id") long id) {
         log.info("Executing RegistrationServiceClient for id {}...", id);
-        RegistrationResponse response = rsclient.execute(id);
+        final RegistrationResponse response = rsclient.execute(id);
         String registration = null;
 
         try {

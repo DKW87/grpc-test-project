@@ -19,7 +19,7 @@ public class AddressServiceClient {
 
     public AddressResponse execute(long id) {
         log.info("Requesting response from AddressServiceGrpc for id {}...", id);
-        AddressRequest request = AddressRequest.newBuilder().setId(id).build();
+        final AddressRequest request = AddressRequest.newBuilder().setId(id).build();
         return stub.getAddress(request);
     }
 
