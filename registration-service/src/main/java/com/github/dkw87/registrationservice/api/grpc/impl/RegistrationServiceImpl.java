@@ -36,7 +36,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         final Person person = personServiceClient.execute(request.getId()).getPerson();
 
         final String adjective = StringUtils.capitalize(FAKER.word().adjective());
-        final String hobby = capitalizeWords(FAKER.hobby().activity());
+        final String hobby = capitalizeEachWord(FAKER.hobby().activity());
         final String adverb = StringUtils.capitalize(FAKER.word().adverb());
 
         final RegistrationResponse response = RegistrationResponse.newBuilder()
@@ -52,7 +52,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         responseObserver.onCompleted();
     }
 
-    private String capitalizeWords(String words) {
+    private String capitalizeEachWord(String words) {
         return Arrays.stream(words.split(" "))
                 .map(StringUtils::capitalize)
                 .collect(Collectors.joining(" "));
