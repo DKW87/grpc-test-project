@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class RegistrationServiceController {
 
+    private static final JsonFormat.Printer JSON_PRINTER = JsonFormat.printer().alwaysPrintFieldsWithNoPresence();
+
     private final RegistrationServiceClient registrationServiceClient;
 
     @GetMapping("/{id}")
@@ -26,7 +28,7 @@ public class RegistrationServiceController {
         String registration = null;
 
         try {
-            registration = JsonFormat.printer().alwaysPrintFieldsWithNoPresence().print(response);
+            registration = JSON_PRINTER.print(response);
         } catch (InvalidProtocolBufferException e) {
             log.error("Error while creating JSON response for {} \n", id, e);
         }
