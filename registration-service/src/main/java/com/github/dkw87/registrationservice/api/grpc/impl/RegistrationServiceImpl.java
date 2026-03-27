@@ -25,15 +25,15 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
 
     private static final Faker FAKER = new Faker(Locale.ENGLISH);
 
-    private final PersonServiceClient psClient;
-    private final AddressServiceClient asClient;
+    private final PersonServiceClient personServiceClient;
+    private final AddressServiceClient addressServiceClient;
 
     @Override
     public void getRegistration(RegistrationRequest request, StreamObserver<RegistrationResponse> responseObserver) {
         log.info("Received request for getRegistration() for id {}...", request.getId());
 
-        final Address address = asClient.execute(request.getId()).getAddress();
-        final Person person = psClient.execute(request.getId()).getPerson();
+        final Address address = addressServiceClient.execute(request.getId()).getAddress();
+        final Person person = personServiceClient.execute(request.getId()).getPerson();
 
         final String adjective = StringUtils.capitalize(FAKER.word().adjective());
         final String hobby = capitalizeWords(FAKER.hobby().activity());

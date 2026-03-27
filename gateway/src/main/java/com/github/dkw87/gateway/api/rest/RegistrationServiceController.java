@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class RegistrationServiceController {
 
-    private final RegistrationServiceClient rsclient;
+    private final RegistrationServiceClient registrationServiceClient;
 
     @GetMapping("/{id}")
     public String getId(@PathVariable("id") long id) {
         log.info("Executing RegistrationServiceClient for id {}...", id);
-        final RegistrationResponse response = rsclient.execute(id);
+        final RegistrationResponse response = registrationServiceClient.execute(id);
         String registration = null;
 
         try {
