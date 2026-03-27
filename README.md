@@ -56,7 +56,7 @@ Example response (JSON):
     "gender": "Male",
     "dob": "15-03-1990",
     "pob": "Springfield",
-    "hobbys": ["Cycling", "Photography", "Cooking"]
+    "hobbies": ["Cycling", "Photography", "Cooking"]
   },
   "address": {
     "streetAndNumber": "Maple Street 42",

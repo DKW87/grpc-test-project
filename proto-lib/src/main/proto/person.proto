@@ -18,7 +18,7 @@ message Person {
   string gender = 2;
   string dob = 3;
   string pob = 4;
-  repeated string hobbys = 5;
+  repeated string hobbies = 5;
 }
 
 message PersonResponse {
