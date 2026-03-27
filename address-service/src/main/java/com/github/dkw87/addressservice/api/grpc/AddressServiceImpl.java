@@ -15,7 +15,7 @@ import java.util.Locale;
 @Slf4j
 public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBase {
 
-    private final static Faker FAKER = new Faker(Locale.ENGLISH);
+    private static final Faker FAKER = new Faker(Locale.ENGLISH);
 
     @Override
     public void getAddress(AddressRequest request, StreamObserver<AddressResponse> responseObserver) {

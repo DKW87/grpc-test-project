@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class RegistrationServiceCache {
 
-    private final static ConcurrentHashMap<Long, RegistrationResponse> CACHE_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Long, RegistrationResponse> CACHE_MAP = new ConcurrentHashMap<>();
 
     public RegistrationResponse getFromCache(long id) {
         final RegistrationResponse registration = CACHE_MAP.get(id);
