@@ -13,22 +13,27 @@ import java.util.Locale;
 @Slf4j
 public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
 
+    private static final Faker FAKER = new Faker(Locale.ENGLISH);
+
     @Override
     public void getPerson(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
         log.info("Received request for getPerson() for id {}...", request.getId());
-        final Faker faker = new Faker(Locale.ENGLISH);
 
-        final List<String> hobbys = List.of(faker.hobby().activity(), faker.hobby().activity(), faker.hobby().activity());
-        final String gender = faker.gender().binaryTypes();
+        final List<String> hobbys = List.of(
+                FAKER.hobby().activity(),
+                FAKER.hobby().activity(),
+                FAKER.hobby().activity()
+        );
+        final String gender = FAKER.gender().binaryTypes();
         final String fullName = gender.equals("Male")
-                ? faker.name().maleFirstName() + " " + faker.name().lastName()
-                : faker.name().femaleFirstName() + " " + faker.name().lastName();
+                ? FAKER.name().maleFirstName() + " " + FAKER.name().lastName()
+                : FAKER.name().femaleFirstName() + " " + FAKER.name().lastName();
 
         final Person person = Person.newBuilder()
                 .setName(fullName)
                 .setGender(gender)
-                .setDob(faker.timeAndDate().birthday("dd-MM-yyyy"))
-                .setPob(faker.address().city())
+                .setDob(FAKER.timeAndDate().birthday("dd-MM-yyyy"))
+                .setPob(FAKER.address().city())
                 .addAllHobbys(hobbys) // dont use setter but addAll to add whole List<>, setter can overwrite specific index w/ value
                 .build();
 

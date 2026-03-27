@@ -15,16 +15,17 @@ import java.util.Locale;
 @Slf4j
 public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBase {
 
+    private final static Faker FAKER = new Faker(Locale.ENGLISH);
+
     @Override
     public void getAddress(AddressRequest request, StreamObserver<AddressResponse> responseObserver) {
         log.info("Received request for getAddress() for id {}...", request.getId());
-        final Faker faker = new Faker(Locale.ENGLISH);
 
         final Address address = Address.newBuilder()
-                .setStreetAndNumber(faker.address().streetName() + " " + faker.address().streetAddressNumber())
-                .setZip(faker.address().zipCode())
-                .setCity(faker.address().city())
-                .setCountry(faker.address().country())
+                .setStreetAndNumber(FAKER.address().streetName() + " " + FAKER.address().streetAddressNumber())
+                .setZip(FAKER.address().zipCode())
+                .setCity(FAKER.address().city())
+                .setCountry(FAKER.address().country())
                 .build();
 
         final AddressResponse response = AddressResponse.newBuilder()

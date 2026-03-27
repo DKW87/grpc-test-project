@@ -23,25 +23,26 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RegistrationServiceImpl extends RegistrationServiceGrpc.RegistrationServiceImplBase {
 
+    private static final Faker FAKER = new Faker(Locale.ENGLISH);
+
     private final PersonServiceClient psClient;
     private final AddressServiceClient asClient;
 
     @Override
     public void getRegistration(RegistrationRequest request, StreamObserver<RegistrationResponse> responseObserver) {
         log.info("Received request for getRegistration() for id {}...", request.getId());
-        final Faker faker = new Faker(Locale.ENGLISH);
 
         final Address address = asClient.execute(request.getId()).getAddress();
         final Person person = psClient.execute(request.getId()).getPerson();
 
-        final String adjective = StringUtils.capitalize(faker.word().adjective());
-        final String hobby = capitalizeWords(faker.hobby().activity());
-        final String adverb = StringUtils.capitalize(faker.word().adverb());
+        final String adjective = StringUtils.capitalize(FAKER.word().adjective());
+        final String hobby = capitalizeWords(FAKER.hobby().activity());
+        final String adverb = StringUtils.capitalize(FAKER.word().adverb());
 
         final RegistrationResponse response = RegistrationResponse.newBuilder()
                 .setId(request.getId())
                 .setEventName(String.format("%s %s %s", adjective,hobby,adverb))
-                .setWantsToReceiveNewsletter(faker.bool().bool())
+                .setWantsToReceiveNewsletter(FAKER.bool().bool())
                 .setAddress(address)
                 .setPerson(person)
                 .build();
