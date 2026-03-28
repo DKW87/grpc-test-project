@@ -1,0 +1,14 @@
+package com.github.dkw87.gateway.api.rest;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public record ErrorResponse(
+        int status,
+        String error,
+        String message,
+        LocalDateTime timestamp,
+        List<Violation> violations
+) {
+    public record Violation(String field, String message) {}
+}
