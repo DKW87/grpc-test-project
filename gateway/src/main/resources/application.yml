@@ -6,6 +6,9 @@ spring:
       channels:
         registration-service:
           address: localhost:9090
+  web:
+    locale: en
+    locale-resolver: fixed
 
 server:
   port: 8080
