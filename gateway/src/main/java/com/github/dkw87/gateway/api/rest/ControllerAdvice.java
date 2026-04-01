@@ -1,5 +1,6 @@
 package com.github.dkw87.gateway.api.rest;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,19 @@ public class ControllerAdvice {
                         "Validation failed",
                         LocalDateTime.now(),
                         violations
+                )
+        );
+    }
+
+    @ExceptionHandler(InvalidProtocolBufferException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidProtocolBufferException(InvalidProtocolBufferException e) {
+        return ResponseEntity.internalServerError().body(
+                new ErrorResponse(
+                        500,
+                        "Internal Server Error",
+                        "The following error occured when creating a JSON response: " + e.getMessage(),
+                        LocalDateTime.now(),
+                        null
                 )
         );
     }
