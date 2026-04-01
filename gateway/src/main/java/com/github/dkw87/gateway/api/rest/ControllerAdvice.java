@@ -25,7 +25,7 @@ public class ControllerAdvice {
 
         final List<ErrorResponse.Detail> details = e.getConstraintViolations().stream().map(
                 violation -> new ErrorResponse.Detail(
-                        "validation violation",
+                        "violation",
                         violation.getPropertyPath().toString().replaceAll(".*\\.", "")
                                 + " " +violation.getMessage()
                 )
