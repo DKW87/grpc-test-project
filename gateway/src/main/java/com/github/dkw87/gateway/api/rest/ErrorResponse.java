@@ -8,6 +8,7 @@ public record ErrorResponse(
         String error,
         String message,
         LocalDateTime timestamp,
+        String traceId,
         List<Detail> details
 ) {
     public record Detail(String type, String message) {}
