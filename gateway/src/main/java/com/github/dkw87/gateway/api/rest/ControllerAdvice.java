@@ -48,7 +48,7 @@ public class ControllerAdvice {
     @ExceptionHandler(InvalidProtocolBufferException.class)
     public ResponseEntity<ErrorResponse> handleInvalidProtocolBufferException(InvalidProtocolBufferException e) {
         final String traceId = traceIdGenerator.generate();
-        log.error("InvalidProtocolBufferException with traceId({}) occurred: ", traceId, e);
+        log.error("InvalidProtocolBufferException occurred trying to print JSON response with traceId({}): ", traceId, e);
 
         final ErrorResponse.Detail detail = new ErrorResponse.Detail(
                 "exception",
