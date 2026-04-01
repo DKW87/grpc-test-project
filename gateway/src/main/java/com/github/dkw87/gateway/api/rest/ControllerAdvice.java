@@ -21,8 +21,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException e) {
-        final String traceId = traceIdGenerator.generate();
-
         final List<ErrorResponse.Detail> details = e.getConstraintViolations().stream().map(
                 violation -> new ErrorResponse.Detail(
                         "violation",
@@ -31,6 +29,7 @@ public class ControllerAdvice {
                 )
         ).toList();
 
+        final String traceId = traceIdGenerator.generate();
         log.warn("Bad Request with traceId({}) did not pass validation: {} ",traceId, details);
 
         return ResponseEntity.badRequest().body(
