@@ -2,6 +2,7 @@ package com.github.dkw87.gateway.api.rest;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice
+@Slf4j
 public class ControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -20,6 +22,8 @@ public class ControllerAdvice {
                         violation.getMessage()
                 )
         ).toList();
+
+        log.warn("Bad Request did not pass validation: {} ", violations);
 
         return ResponseEntity.badRequest().body(
                 new ErrorResponse(
@@ -34,13 +38,20 @@ public class ControllerAdvice {
 
     @ExceptionHandler(InvalidProtocolBufferException.class)
     public ResponseEntity<ErrorResponse> handleInvalidProtocolBufferException(InvalidProtocolBufferException e) {
+        log.error("InvalidProtocolBufferException occurred: ", e);
+
+        ErrorResponse.Violation violation = new ErrorResponse.Violation(
+                "exception",
+                e.getMessage()
+        );
+
         return ResponseEntity.internalServerError().body(
                 new ErrorResponse(
                         500,
                         "Internal Server Error",
-                        "The following error occured when creating a JSON response: " + e.getMessage(),
+                        "Could not print JSON response",
                         LocalDateTime.now(),
-                        null
+                        List.of(violation)
                 )
         );
     }
