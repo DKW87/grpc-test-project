@@ -25,16 +25,12 @@ public class RegistrationServiceController {
     private final RegistrationServiceClient registrationServiceClient;
 
     @GetMapping("/{id}")
-    public String getId(@PathVariable @Positive long id) {
+    public String getId(@PathVariable @Positive long id) throws InvalidProtocolBufferException {
         log.info("Executing RegistrationServiceClient for id {}...", id);
-        final RegistrationResponse response = registrationServiceClient.execute(id);
-        String registration = null;
 
-        try {
-            registration = JSON_PRINTER.print(response);
-        } catch (InvalidProtocolBufferException e) {
-            log.error("Error while creating JSON response for {} \n", id, e);
-        }
+        final RegistrationResponse response = registrationServiceClient.execute(id);
+
+        final String registration = JSON_PRINTER.print(response);
 
         log.info("Response from RegistrationServiceClient: {}", registration);
         return registration;
