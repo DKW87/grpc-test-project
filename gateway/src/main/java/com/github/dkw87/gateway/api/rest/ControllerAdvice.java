@@ -16,14 +16,15 @@ public class ControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException e) {
-        List<ErrorResponse.Violation> violations = e.getConstraintViolations().stream().map(
-                violation -> new ErrorResponse.Violation(
-                        violation.getPropertyPath().toString().replaceAll(".*\\.", ""),
-                        violation.getMessage()
+        List<ErrorResponse.Detail> details = e.getConstraintViolations().stream().map(
+                violation -> new ErrorResponse.Detail(
+                        "validation violation",
+                        violation.getPropertyPath().toString().replaceAll(".*\\.", "")
+                                + " " +violation.getMessage()
                 )
         ).toList();
 
-        log.warn("Bad Request did not pass validation: {} ", violations);
+        log.warn("Bad Request did not pass validation: {} ", details);
 
         return ResponseEntity.badRequest().body(
                 new ErrorResponse(
@@ -31,7 +32,7 @@ public class ControllerAdvice {
                         "Bad Request",
                         "Validation failed",
                         LocalDateTime.now(),
-                        violations
+                        details
                 )
         );
     }
@@ -40,7 +41,7 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorResponse> handleInvalidProtocolBufferException(InvalidProtocolBufferException e) {
         log.error("InvalidProtocolBufferException occurred: ", e);
 
-        ErrorResponse.Violation violation = new ErrorResponse.Violation(
+        ErrorResponse.Detail detail = new ErrorResponse.Detail(
                 "exception",
                 e.getMessage()
         );
@@ -51,7 +52,7 @@ public class ControllerAdvice {
                         "Internal Server Error",
                         "Could not print JSON response",
                         LocalDateTime.now(),
-                        List.of(violation)
+                        List.of(detail)
                 )
         );
     }

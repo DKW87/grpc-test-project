@@ -8,7 +8,7 @@ public record ErrorResponse(
         String error,
         String message,
         LocalDateTime timestamp,
-        List<Violation> violations
+        List<Detail> details
 ) {
-    public record Violation(String field, String message) {}
+    public record Detail(String type, String message) {}
 }
