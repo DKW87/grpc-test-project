@@ -2,9 +2,12 @@ package com.github.dkw87.gateway.api.rest;
 
 import com.github.dkw87.gateway.api.rest.util.TraceIdGenerator;
 import com.google.protobuf.InvalidProtocolBufferException;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,7 +40,6 @@ public class ControllerAdvice {
                         400,
                         "Bad Request",
                         "Validation failed",
-                        LocalDateTime.now(),
                         traceId,
                         details
                 )
@@ -59,7 +61,6 @@ public class ControllerAdvice {
                         500,
                         "Internal Server Error",
                         "Could not print JSON response",
-                        LocalDateTime.now(),
                         traceId,
                         List.of(detail)
                 )
