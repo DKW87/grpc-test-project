@@ -71,10 +71,10 @@ public class ControllerAdvice {
         final String description = e.getStatus().getDescription();
         final String traceId = traceIdGenerator.generate();
 
-        if (isGrpcErrorLevel(code)) {
-            log.error("gRPC error occurred with traceId({}): {}", traceId, code.name(), e);
+        if (isGrpcWarnLevel(code)) {
+            log.warn("gRPC warning occurred with traceId({}): {}", traceId, code.name(), e);
         } else {
-            log.error("gRPC warning occurred with traceId({}): {}", traceId, code.name(), e);
+            log.error("gRPC error occurred with traceId({}): {}", traceId, code.name(), e);
         }
 
         return ResponseEntity.status(mapGrpcToHttp(code)).body(
@@ -88,11 +88,11 @@ public class ControllerAdvice {
         );
     }
 
-    private boolean isGrpcErrorLevel(Status.Code code) {
+    private boolean isGrpcWarnLevel(Status.Code code) {
         return switch (code) {
             case INVALID_ARGUMENT, NOT_FOUND, ALREADY_EXISTS, PERMISSION_DENIED,
-                 UNAUTHENTICATED, CANCELLED, FAILED_PRECONDITION, OUT_OF_RANGE -> false;
-            default -> true;
+                 UNAUTHENTICATED, CANCELLED, FAILED_PRECONDITION, OUT_OF_RANGE -> true;
+            default -> false;
         };
     }
 
