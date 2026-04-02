@@ -11,5 +11,10 @@ public record ErrorResponse(
         String traceId,
         List<Detail> details
 ) {
+
+    public ErrorResponse(int status, String error, String message, String traceId, List<Detail> details) {
+        this(status, error, message, LocalDateTime.now(), traceId, details);
+    }
+
     public record Detail(String type, String message) {}
 }
