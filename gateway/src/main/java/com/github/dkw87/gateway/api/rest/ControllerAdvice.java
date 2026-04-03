@@ -72,11 +72,12 @@ public class ControllerAdvice {
         final Status.Code code = e.getStatus().getCode();
         final String description = e.getStatus().getDescription();
         final String traceId = traceIdGenerator.generate();
+        final String message = e.getMessage();
 
         if (grpcUtil.isGrpcWarnLevel(code)) {
-            log.warn("gRPC warning occurred with traceId({}): {}", traceId, code.name(), e);
+            log.warn("gRPC warning: \"{}\" occurred with traceId({})", message, traceId, e);
         } else {
-            log.error("gRPC error occurred with traceId({}): {}", traceId, code.name(), e);
+            log.error("gRPC error: \"{}\" occurred with traceId({})", message, traceId, e);
         }
 
         return ResponseEntity.status(grpcUtil.mapGrpcToHttp(code)).body(
