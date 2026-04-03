@@ -24,15 +24,9 @@ public class ControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException e) {
-        final List<ErrorResponse.Detail> details = e.getConstraintViolations().stream().map(
-                violation -> new ErrorResponse.Detail(
-                        "violation",
-                        violation.getPropertyPath().toString().replaceAll(".*\\.", "")
-                                + " " +violation.getMessage()
-                )
-        ).toList();
-
+        final List<ErrorResponse.Detail> details = mapViolations(e);
         final String traceId = traceIdGenerator.generate();
+
         log.warn("Bad Request with traceId({}) did not pass validation: {} ",traceId, details);
 
         return ResponseEntity.badRequest().body(
@@ -46,9 +40,20 @@ public class ControllerAdvice {
         );
     }
 
+    private List<ErrorResponse.Detail> mapViolations(ConstraintViolationException e) {
+        return e.getConstraintViolations().stream().map(
+                violation -> new ErrorResponse.Detail(
+                        "violation",
+                        violation.getPropertyPath().toString().replaceAll(".*\\.", "")
+                                + " " +violation.getMessage()
+                )
+        ).toList();
+    }
+
     @ExceptionHandler(InvalidProtocolBufferException.class)
     public ResponseEntity<ErrorResponse> handleInvalidProtocolBufferException(InvalidProtocolBufferException e) {
         final String traceId = traceIdGenerator.generate();
+
         log.error("InvalidProtocolBufferException occurred trying to print JSON response with traceId({}): ", traceId, e);
 
         return ResponseEntity.internalServerError().body(
@@ -67,11 +72,7 @@ public class ControllerAdvice {
         final Status.Code code = e.getStatus().getCode();
         final String traceId = traceIdGenerator.generate();
 
-        if (grpcUtil.isGrpcWarnLevel(code)) {
-            log.warn("gRPC warning: \"{}\" occurred with traceId({})", e.getMessage(), traceId, e);
-        } else {
-            log.error("gRPC error: \"{}\" occurred with traceId({})", e.getMessage(), traceId, e);
-        }
+        logStatusRuntimeException(e, traceId);
 
         return ResponseEntity.status(grpcUtil.mapGrpcToHttp(code)).body(
                 new ErrorResponse(
@@ -82,6 +83,14 @@ public class ControllerAdvice {
                         List.of(new ErrorResponse.Detail("exception", e.getClass().getSimpleName()))
                 )
         );
+    }
+
+    private void logStatusRuntimeException(StatusRuntimeException e, String traceId) {
+        if (grpcUtil.isGrpcWarnLevel(e.getStatus().getCode())) {
+            log.warn("gRPC warning: \"{}\" occurred with traceId({})", e.getMessage(), traceId, e);
+        } else {
+            log.error("gRPC error: \"{}\" occurred with traceId({})", e.getMessage(), traceId, e);
+        }
     }
 
 }
