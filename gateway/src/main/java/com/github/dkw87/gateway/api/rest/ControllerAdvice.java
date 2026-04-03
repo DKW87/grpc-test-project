@@ -1,5 +1,6 @@
 package com.github.dkw87.gateway.api.rest;
 
+import com.github.dkw87.gateway.api.rest.util.GrpcUtil;
 import com.github.dkw87.gateway.api.rest.util.TraceIdGenerator;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.grpc.Status;
@@ -19,6 +20,7 @@ import java.util.List;
 public class ControllerAdvice {
 
     private final TraceIdGenerator traceIdGenerator;
+    private final GrpcUtil grpcUtil;
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException e) {
@@ -71,43 +73,21 @@ public class ControllerAdvice {
         final String description = e.getStatus().getDescription();
         final String traceId = traceIdGenerator.generate();
 
-        if (isGrpcWarnLevel(code)) {
+        if (grpcUtil.isGrpcWarnLevel(code)) {
             log.warn("gRPC warning occurred with traceId({}): {}", traceId, code.name(), e);
         } else {
             log.error("gRPC error occurred with traceId({}): {}", traceId, code.name(), e);
         }
 
-        return ResponseEntity.status(mapGrpcToHttp(code)).body(
+        return ResponseEntity.status(grpcUtil.mapGrpcToHttp(code)).body(
                 new ErrorResponse(
-                        mapGrpcToHttp(code),
+                        grpcUtil.mapGrpcToHttp(code),
                         "gRPC Error",
                         code.name(),
                         traceId,
                         List.of(new ErrorResponse.Detail("description", description))
                 )
         );
-    }
-
-    private boolean isGrpcWarnLevel(Status.Code code) {
-        return switch (code) {
-            case INVALID_ARGUMENT, NOT_FOUND, ALREADY_EXISTS, PERMISSION_DENIED,
-                 UNAUTHENTICATED, CANCELLED, FAILED_PRECONDITION, OUT_OF_RANGE -> true;
-            default -> false;
-        };
-    }
-
-    private int mapGrpcToHttp(Status.Code code) {
-        return switch (code) {
-            case INVALID_ARGUMENT, FAILED_PRECONDITION, OUT_OF_RANGE -> 400;
-            case NOT_FOUND -> 404;
-            case ALREADY_EXISTS -> 409;
-            case UNAUTHENTICATED -> 401;
-            case PERMISSION_DENIED -> 403;
-            case RESOURCE_EXHAUSTED -> 429;
-            case UNIMPLEMENTED -> 501;
-            case UNAVAILABLE, DEADLINE_EXCEEDED -> 503;
-            default -> 500;
-        };
     }
 
 }
