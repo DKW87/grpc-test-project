@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -37,25 +38,24 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
     @Override
     public void getRegistration(RegistrationRequest request, StreamObserver<RegistrationResponse> responseObserver) {
         log.info("Received request for getRegistration() for id {}...", request.getId());
-
-        final CompletableFuture<AddressResponse> addressFuture =
-                CompletableFuture.supplyAsync(() -> addressServiceClient.execute(request.getId()));
-        final CompletableFuture<PersonResponse> personFuture =
-                CompletableFuture.supplyAsync(() -> personServiceClient.execute(request.getId()));
-
-        CompletableFuture.allOf(addressFuture, personFuture).join();
-
         Address address = null;
         Person person = null;
 
         try {
+            final CompletableFuture<AddressResponse> addressFuture =
+                    CompletableFuture.supplyAsync(() -> addressServiceClient.execute(request.getId()));
+            final CompletableFuture<PersonResponse> personFuture =
+                    CompletableFuture.supplyAsync(() -> personServiceClient.execute(request.getId()));
+            CompletableFuture.allOf(addressFuture, personFuture).join();
+
             address = addressFuture.get().getAddress();
             person = personFuture.get().getPerson();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (ExecutionException | InterruptedException | CompletionException e) {
             responseObserver.onError(Status.INTERNAL
                     .withDescription(e.getMessage())
                     .withCause(e)
                     .asRuntimeException());
+            return;
         }
 
         final String adjective = StringUtils.capitalize(FAKER.word().adjective());
