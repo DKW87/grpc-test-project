@@ -52,7 +52,10 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
             address = addressFuture.get().getAddress();
             person = personFuture.get().getPerson();
         } catch (ExecutionException | InterruptedException e) {
-            responseObserver.onError(Status.INTERNAL.withCause(e).asRuntimeException());
+            responseObserver.onError(Status.INTERNAL
+                    .withDescription(e.getMessage())
+                    .withCause(e)
+                    .asRuntimeException());
         }
 
         final String adjective = StringUtils.capitalize(FAKER.word().adjective());
