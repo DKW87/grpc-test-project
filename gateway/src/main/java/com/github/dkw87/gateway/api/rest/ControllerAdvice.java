@@ -76,10 +76,10 @@ public class ControllerAdvice {
         return ResponseEntity.status(grpcUtil.mapGrpcToHttp(code)).body(
                 new ErrorResponse(
                         grpcUtil.mapGrpcToHttp(code),
-                        "gRPC Error",
-                        e.getClass().getSimpleName(),
+                        code.name(),
+                        e.getStatus().getDescription(),
                         traceId,
-                        List.of(new ErrorResponse.Detail(code.name(), e.getStatus().getDescription()))
+                        List.of(new ErrorResponse.Detail("exception", e.getClass().getSimpleName()))
                 )
         );
     }
