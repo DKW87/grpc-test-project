@@ -51,18 +51,13 @@ public class ControllerAdvice {
         final String traceId = traceIdGenerator.generate();
         log.error("InvalidProtocolBufferException occurred trying to print JSON response with traceId({}): ", traceId, e);
 
-        final ErrorResponse.Detail detail = new ErrorResponse.Detail(
-                "exception",
-                e.getMessage()
-        );
-
         return ResponseEntity.internalServerError().body(
                 new ErrorResponse(
                         500,
                         "Internal Server Error",
                         "Could not print JSON response",
                         traceId,
-                        List.of(detail)
+                        List.of(new ErrorResponse.Detail("exception", e.getMessage()))
                 )
         );
     }
@@ -70,23 +65,21 @@ public class ControllerAdvice {
     @ExceptionHandler(StatusRuntimeException.class)
     public ResponseEntity<ErrorResponse> handleStatusRuntimeException(StatusRuntimeException e) {
         final Status.Code code = e.getStatus().getCode();
-        final String description = e.getStatus().getDescription();
         final String traceId = traceIdGenerator.generate();
-        final String message = e.getMessage();
 
         if (grpcUtil.isGrpcWarnLevel(code)) {
-            log.warn("gRPC warning: \"{}\" occurred with traceId({})", message, traceId, e);
+            log.warn("gRPC warning: \"{}\" occurred with traceId({})", e.getMessage(), traceId, e);
         } else {
-            log.error("gRPC error: \"{}\" occurred with traceId({})", message, traceId, e);
+            log.error("gRPC error: \"{}\" occurred with traceId({})", e.getMessage(), traceId, e);
         }
 
         return ResponseEntity.status(grpcUtil.mapGrpcToHttp(code)).body(
                 new ErrorResponse(
                         grpcUtil.mapGrpcToHttp(code),
                         "gRPC Error",
-                        code.name(),
+                        e.getClass().getSimpleName(),
                         traceId,
-                        List.of(new ErrorResponse.Detail("description", description))
+                        List.of(new ErrorResponse.Detail(code.name(), e.getStatus().getDescription()))
                 )
         );
     }
