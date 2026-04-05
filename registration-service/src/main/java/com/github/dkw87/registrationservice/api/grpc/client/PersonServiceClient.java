@@ -3,6 +3,7 @@ package com.github.dkw87.registrationservice.api.grpc.client;
 import com.github.dkw87.grpc.proto.person.PersonRequest;
 import com.github.dkw87.grpc.proto.person.PersonResponse;
 import com.github.dkw87.grpc.proto.person.PersonServiceGrpc;
+import io.grpc.Context;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ public class PersonServiceClient {
     public PersonResponse execute(long id) {
         log.info("Requesting response from PersonServiceGrpc for id {}...", id);
         final PersonRequest request = PersonRequest.newBuilder().setId(id).build();
-        return stub.getPerson(request);
+        return stub.withDeadline(Context.current().getDeadline()).getPerson(request);
     }
 
 }

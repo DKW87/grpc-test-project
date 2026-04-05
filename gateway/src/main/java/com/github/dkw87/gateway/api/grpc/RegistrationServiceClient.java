@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 @Slf4j
 public class RegistrationServiceClient {
@@ -30,7 +32,7 @@ public class RegistrationServiceClient {
         final RegistrationRequest request = RegistrationRequest.newBuilder().setId(id).build();
 
         log.info("Requesting response from RegistrationServiceGrpc for id {}...", id);
-        final RegistrationResponse queriedResponse = stub.getRegistration(request);
+        final RegistrationResponse queriedResponse = stub.withDeadlineAfter(5, TimeUnit.SECONDS).getRegistration(request);
         log.info("Received response from RegistrationServiceGrpc for id {} ", id);
 
         cache.putInCache(queriedResponse);
