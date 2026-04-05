@@ -1,6 +1,7 @@
 package com.github.dkw87.personservice.api.grpc;
 
 import com.github.dkw87.grpc.proto.person.*;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
@@ -18,6 +19,8 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
     @Override
     public void getPerson(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
         log.info("Received request for getPerson() for id {}...", request.getId());
+
+        if (simulatePersonNotFound(request, responseObserver)) return;
 
         final List<String> hobbies = List.of(
                 FAKER.hobby().activity(),
@@ -44,6 +47,18 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
         responseObserver.onNext(response);
         log.info("Successfully sent PersonResponse for id {}", request.getId());
         responseObserver.onCompleted();
+    }
+
+    private static boolean simulatePersonNotFound(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
+        if (FAKER.number().numberBetween(0, 10) == 0) {
+            log.warn("Person with id {} not found", request.getId());
+            responseObserver.onError(Status.NOT_FOUND
+                    .withDescription(
+                            String.format("Person with id %d not found", request.getId()))
+                    .asRuntimeException());
+            return true;
+        }
+        return false;
     }
 
 }
