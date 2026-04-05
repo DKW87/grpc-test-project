@@ -75,14 +75,14 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
     private void handleException(StreamObserver<RegistrationResponse> responseObserver, long id, Exception e) {
         log.error("Error while getting registration for id {}", id, e);
 
-        final Throwable cause = e.getCause();
+        final Throwable cause = e.getCause() != null ? e.getCause() : e;
         final Status status = (cause instanceof StatusRuntimeException sre)
                 ? sre.getStatus()
                 : Status.INTERNAL;
 
         responseObserver.onError(status
-                .withDescription(e.getMessage())
-                .withCause(e)
+                .withDescription(cause.getMessage())
+                .withCause(cause)
                 .asRuntimeException());
     }
 
