@@ -38,8 +38,8 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
     @Override
     public void getRegistration(RegistrationRequest request, StreamObserver<RegistrationResponse> responseObserver) {
         log.info("Received request for getRegistration() for id {}...", request.getId());
-        Address address = null;
-        Person person = null;
+        Address address;
+        Person person;
 
         try {
             final CompletableFuture<AddressResponse> addressFuture =
@@ -51,6 +51,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
             address = addressFuture.get().getAddress();
             person = personFuture.get().getPerson();
         } catch (ExecutionException | InterruptedException | CompletionException e) {
+            log.error("Error while getting registration for id {}", request.getId(), e);
             responseObserver.onError(Status.INTERNAL
                     .withDescription(e.getMessage())
                     .withCause(e)
