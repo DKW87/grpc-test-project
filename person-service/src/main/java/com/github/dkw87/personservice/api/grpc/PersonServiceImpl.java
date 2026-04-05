@@ -49,7 +49,7 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
         responseObserver.onCompleted();
     }
 
-    private static boolean simulatePersonNotFound(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
+    private boolean simulatePersonNotFound(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
         if (FAKER.number().numberBetween(0, 10) == 0) {
             log.warn("Person with id {} not found", request.getId());
             responseObserver.onError(Status.NOT_FOUND
