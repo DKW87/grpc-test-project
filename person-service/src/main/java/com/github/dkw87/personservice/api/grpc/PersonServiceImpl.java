@@ -20,7 +20,7 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
     public void getPerson(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
         log.info("Received request for getPerson() for id {}...", request.getId());
 
-        if (simulatePersonNotFound(request, responseObserver)) return;
+        if (possiblyNotFoundResponse(request, responseObserver)) return;
 
         final List<String> hobbies = List.of(
                 FAKER.hobby().activity(),
@@ -49,7 +49,7 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
         responseObserver.onCompleted();
     }
 
-    private boolean simulatePersonNotFound(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
+    private boolean possiblyNotFoundResponse(PersonRequest request, StreamObserver<PersonResponse> responseObserver) {
         if (FAKER.number().numberBetween(0, 10) == 0) {
             log.warn("Person with id {} not found", request.getId());
             responseObserver.onError(Status.NOT_FOUND
