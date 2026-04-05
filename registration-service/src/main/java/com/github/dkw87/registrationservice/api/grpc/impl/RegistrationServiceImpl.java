@@ -51,11 +51,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
             address = addressFuture.get().getAddress();
             person = personFuture.get().getPerson();
         } catch (ExecutionException | InterruptedException | CompletionException e) {
-            log.error("Error while getting registration for id {}", request.getId(), e);
-            responseObserver.onError(Status.INTERNAL
-                    .withDescription(e.getMessage())
-                    .withCause(e)
-                    .asRuntimeException());
+            handleException(responseObserver, request.getId(), e);
             return;
         }
 
@@ -74,6 +70,20 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         responseObserver.onNext(response);
         log.info("Successfully sent RegistrationResponse for id {}", request.getId());
         responseObserver.onCompleted();
+    }
+
+    private void handleException(StreamObserver<RegistrationResponse> responseObserver, long id, Exception e) {
+        log.error("Error while getting registration for id {}", id, e);
+
+        final Throwable cause = e.getCause();
+        final Status status = (cause instanceof StatusRuntimeException sre)
+                ? sre.getStatus()
+                : Status.INTERNAL;
+
+        responseObserver.onError(status
+                .withDescription(e.getMessage())
+                .withCause(e)
+                .asRuntimeException());
     }
 
     private String capitalizeEachWord(String words) {
