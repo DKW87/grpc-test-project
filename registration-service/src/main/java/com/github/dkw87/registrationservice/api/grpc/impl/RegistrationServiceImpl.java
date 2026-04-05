@@ -9,6 +9,7 @@ import com.github.dkw87.grpc.proto.registration.RegistrationResponse;
 import com.github.dkw87.grpc.proto.registration.RegistrationServiceGrpc;
 import com.github.dkw87.registrationservice.api.grpc.client.AddressServiceClient;
 import com.github.dkw87.registrationservice.api.grpc.client.PersonServiceClient;
+import io.grpc.Context;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -38,14 +39,14 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
     @Override
     public void getRegistration(RegistrationRequest request, StreamObserver<RegistrationResponse> responseObserver) {
         log.info("Received request for getRegistration() for id {}...", request.getId());
+        final Context context = Context.current();
+
         Address address;
         Person person;
 
         try {
-            final CompletableFuture<AddressResponse> addressFuture =
-                    CompletableFuture.supplyAsync(() -> addressServiceClient.execute(request.getId()));
-            final CompletableFuture<PersonResponse> personFuture =
-                    CompletableFuture.supplyAsync(() -> personServiceClient.execute(request.getId()));
+            final CompletableFuture<AddressResponse> addressFuture = getAddressAsync(context, request.getId());
+            final CompletableFuture<PersonResponse> personFuture = getPersonAsync(context, request.getId());
             CompletableFuture.allOf(addressFuture, personFuture).join();
 
             address = addressFuture.get().getAddress();
@@ -70,6 +71,28 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
         responseObserver.onNext(response);
         log.info("Successfully sent RegistrationResponse for id {}", request.getId());
         responseObserver.onCompleted();
+    }
+
+    private CompletableFuture<AddressResponse> getAddressAsync(Context context, long id) {
+        return CompletableFuture.supplyAsync(() -> {
+            Context previousContext = context.attach();
+            try {
+                return addressServiceClient.execute(id);
+            } finally {
+                context.detach(previousContext);
+            }
+        });
+    }
+
+    private CompletableFuture<PersonResponse> getPersonAsync(Context context, long id) {
+        return CompletableFuture.supplyAsync(() -> {
+            Context previousContext = context.attach();
+            try {
+                return personServiceClient.execute(id);
+            }  finally {
+                context.detach(previousContext);
+            }
+        });
     }
 
     private void handleException(StreamObserver<RegistrationResponse> responseObserver, long id, Exception e) {
