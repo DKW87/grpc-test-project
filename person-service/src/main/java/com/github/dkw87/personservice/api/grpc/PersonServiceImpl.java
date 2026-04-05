@@ -49,6 +49,7 @@ public class PersonServiceImpl extends PersonServiceGrpc.PersonServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    // simulates error response and propagates it upstream to showcase error handling on new registration query
     private boolean possiblyNotFoundResponse(long id, StreamObserver<PersonResponse> responseObserver) {
         if (FAKER.number().numberBetween(0, 10) == 0) {
             log.warn("Person with id {} not found", id);

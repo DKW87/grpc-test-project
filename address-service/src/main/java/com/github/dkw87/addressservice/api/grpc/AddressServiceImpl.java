@@ -40,6 +40,7 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
 
     }
 
+    // simulates error response and propagates it upstream to showcase error handling on new registration query
     private void possiblySlowResponse() {
         if (FAKER.number().numberBetween(0, 10) == 0) {
             long millis = 6000;
