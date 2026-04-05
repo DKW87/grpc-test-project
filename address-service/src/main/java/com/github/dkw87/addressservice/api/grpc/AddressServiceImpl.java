@@ -4,6 +4,7 @@ import com.github.dkw87.grpc.proto.address.Address;
 import com.github.dkw87.grpc.proto.address.AddressRequest;
 import com.github.dkw87.grpc.proto.address.AddressResponse;
 import com.github.dkw87.grpc.proto.address.AddressServiceGrpc;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
@@ -21,6 +22,8 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
     public void getAddress(AddressRequest request, StreamObserver<AddressResponse> responseObserver) {
         log.info("Received request for getAddress() for id {}...", request.getId());
 
+        if (simulateConnectionTimeout()) return;
+
         final Address address = Address.newBuilder()
                 .setStreetAndNumber(FAKER.address().streetName() + " " + FAKER.address().streetAddressNumber())
                 .setZip(FAKER.address().zipCode())
@@ -36,6 +39,20 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
         log.info("Successfully sent AddressResponse for id {}", request.getId());
         responseObserver.onCompleted();
 
+    }
+
+    private boolean simulateConnectionTimeout() {
+        if (FAKER.number().numberBetween(0, 10) == 0) {
+            long millis = 6000;
+            log.warn("Simulating connection timeout for {}ms...", millis);
+            try {
+                Thread.sleep(millis);
+            } catch (InterruptedException e) {
+                log.warn("Thread sleep interrupted");
+            }
+            return true;
+        }
+        return false;
     }
 
 }
