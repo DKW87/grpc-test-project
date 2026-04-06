@@ -21,9 +21,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 @GrpcService
@@ -32,6 +30,7 @@ import java.util.stream.Collectors;
 public class RegistrationServiceImpl extends RegistrationServiceGrpc.RegistrationServiceImplBase {
 
     private static final Faker FAKER = new Faker(Locale.ENGLISH);
+    private static final Executor EXECUTOR = Executors.newVirtualThreadPerTaskExecutor();
 
     private final PersonServiceClient personServiceClient;
     private final AddressServiceClient addressServiceClient;
@@ -81,7 +80,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
             } finally {
                 context.detach(previousContext);
             }
-        });
+        }, EXECUTOR);
     }
 
     private CompletableFuture<PersonResponse> getPersonAsync(Context context, long id) {
@@ -92,7 +91,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
             } finally {
                 context.detach(previousContext);
             }
-        });
+        }, EXECUTOR);
     }
 
     private void handleException(StreamObserver<RegistrationResponse> responseObserver, long id, Exception e) {
