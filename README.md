@@ -105,9 +105,3 @@ Open the project and use the included **`everything`** compound run configuratio
 | Java | 21+ |
 | Maven | 3.9+ |
 | (Optional) IntelliJ IDEA | For the included run configuration |
-
----
-
-## What is to come in future builds
-- virtual threads;
-- webflux / streaming.
