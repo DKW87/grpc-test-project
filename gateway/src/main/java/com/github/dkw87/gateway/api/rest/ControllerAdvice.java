@@ -27,7 +27,7 @@ public class ControllerAdvice {
         final List<ErrorResponse.Detail> details = mapViolations(e);
         final String traceId = traceIdGenerator.generate();
 
-        log.warn("Bad Request with traceId({}) did not pass validation: {} ",traceId, details);
+        log.warn("Bad Request with traceId({}) did not pass validation: {} ", traceId, details);
 
         return ResponseEntity.badRequest().body(
                 new ErrorResponse(
@@ -45,7 +45,7 @@ public class ControllerAdvice {
                 violation -> new ErrorResponse.Detail(
                         "violation",
                         violation.getPropertyPath().toString().replaceAll(".*\\.", "")
-                                + " " +violation.getMessage()
+                                + " " + violation.getMessage()
                 )
         ).toList();
     }

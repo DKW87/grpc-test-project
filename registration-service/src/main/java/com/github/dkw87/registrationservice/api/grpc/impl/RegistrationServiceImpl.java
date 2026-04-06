@@ -62,7 +62,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
 
         final RegistrationResponse response = RegistrationResponse.newBuilder()
                 .setId(request.getId())
-                .setEventName(String.format("%s %s %s", adjective,hobby,adverb))
+                .setEventName(String.format("%s %s %s", adjective, hobby, adverb))
                 .setWantsToReceiveNewsletter(FAKER.bool().bool())
                 .setAddress(address)
                 .setPerson(person)
@@ -89,7 +89,7 @@ public class RegistrationServiceImpl extends RegistrationServiceGrpc.Registratio
             Context previousContext = context.attach();
             try {
                 return personServiceClient.execute(id);
-            }  finally {
+            } finally {
                 context.detach(previousContext);
             }
         });
