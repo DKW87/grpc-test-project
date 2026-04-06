@@ -100,5 +100,6 @@ Open the project and use the included **`everything`** compound run configuratio
 ## What is to come in future builds
 - error handling;
 - deadline/timeouts;
+- virtual threads;
 - streaming;
 - webflux.
