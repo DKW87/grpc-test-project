@@ -2,7 +2,6 @@ package com.github.dkw87.gateway.api.rest;
 
 import com.github.dkw87.gateway.api.rest.util.GrpcUtil;
 import com.github.dkw87.gateway.api.rest.util.TraceIdGenerator;
-import com.google.protobuf.InvalidProtocolBufferException;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import jakarta.validation.ConstraintViolationException;
@@ -48,23 +47,6 @@ public class ControllerAdvice {
                                 + " " + violation.getMessage()
                 )
         ).toList();
-    }
-
-    @ExceptionHandler(InvalidProtocolBufferException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidProtocolBufferException(InvalidProtocolBufferException e) {
-        final String traceId = traceIdGenerator.generate();
-
-        log.error("InvalidProtocolBufferException occurred trying to print JSON response with traceId({}): ", traceId, e);
-
-        return ResponseEntity.internalServerError().body(
-                new ErrorResponse(
-                        500,
-                        "Internal Server Error",
-                        "Could not print JSON response",
-                        traceId,
-                        List.of(new ErrorResponse.Detail("exception", e.getMessage()))
-                )
-        );
     }
 
     @ExceptionHandler(StatusRuntimeException.class)
