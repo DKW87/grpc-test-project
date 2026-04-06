@@ -16,6 +16,7 @@ import java.util.Locale;
 public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBase {
 
     private static final Faker FAKER = new Faker(Locale.ENGLISH);
+    private static final long SLEEP_IN_MILLIS = 6000;
 
     @Override
     public void getAddress(AddressRequest request, StreamObserver<AddressResponse> responseObserver) {
@@ -43,10 +44,9 @@ public class AddressServiceImpl extends AddressServiceGrpc.AddressServiceImplBas
     // simulates error response and propagates it upstream to showcase error handling on new registration query
     private void possiblySlowResponse() {
         if (FAKER.number().numberBetween(0, 10) == 0) {
-            long millis = 6000;
-            log.warn("Simulating connection timeout for {}ms...", millis);
+            log.warn("Simulating connection timeout for {}ms...", SLEEP_IN_MILLIS);
             try {
-                Thread.sleep(millis);
+                Thread.sleep(SLEEP_IN_MILLIS);
             } catch (InterruptedException e) {
                 log.warn("Thread sleep interrupted");
             }
