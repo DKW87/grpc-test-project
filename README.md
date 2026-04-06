@@ -26,13 +26,24 @@ A Spring Boot multi-module project demonstrating inter-service communication via
 
 ### Modules
 
-| Module | Description                                                                                                                                              |
-|---|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `proto-lib` | Shared Protobuf definitions and generated gRPC stubs                                                                                                     |
-| `gateway` | REST API gateway; exposes `GET /api/v1/registrations/{id}` and calls Registration Service via gRPC. Has an in-memory cache of previously sent responses. |
-| `registration-service` | Aggregates Person + Address data, generates a fake event name and newsletter preference                                                                  |
-| `person-service` | Returns a randomly generated person (name, gender, date/place of birth, hobbies)                                                                         |
-| `address-service` | Returns a randomly generated address (street, zip, city, country)                                                                                        |
+| Module | Description                                                                                                                                                                                                                                       |
+|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `proto-lib` | Shared Protobuf definitions and generated gRPC stubs                                                                                                                                                                                              |
+| `gateway` | REST API gateway: exposes `GET /api/v1/registrations/{id}` and calls Registration Service via gRPC. Caches previously sent responses in own memory. |
+| `registration-service` | Aggregates Person + Address data, generates a fake event name and newsletter preference                                                                                                                                                           |
+| `person-service` | Returns a randomly generated person (name, gender, date/place of birth, hobbies)                                                                                                                                                                  |
+| `address-service` | Returns a randomly generated address (street, zip, city, country)                                                                                                                                                                                 |
+
+---
+
+## Error Handling
+
+In order to propagate gRPC errors through the whole stream, the following errors are simulated at the furthest point downstream: 
+- Person Service has a 10% chance to throw a `NOT_FOUND` response; 
+- Address Service has a 10% chance to respond slowly, causing a `DEADLINE_EXCEEDED` response;
+- Turning off a service downstream will result in an `UNAVAILABLE` response.
+
+gRPC StatusRuntimeExceptions are mapped to relevant HTTP status codes, see `ControllerAdvice` for more information.
 
 ---
 
@@ -98,8 +109,5 @@ Open the project and use the included **`everything`** compound run configuratio
 ---
 
 ## What is to come in future builds
-- error handling;
-- deadline/timeouts;
 - virtual threads;
-- streaming;
-- webflux.
+- webflux / streaming.
