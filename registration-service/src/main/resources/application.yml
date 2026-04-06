@@ -10,3 +10,6 @@ spring:
           address: localhost:9091
         address-service:
           address: localhost:9092
+  threads:
+    virtual:
+      enabled: true

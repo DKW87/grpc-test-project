@@ -4,3 +4,6 @@ spring:
   grpc:
     server:
       port: 9091
+  threads:
+    virtual:
+      enabled: true
